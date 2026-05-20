@@ -8,7 +8,7 @@ const STATUS_MAP = {
 };
 
 const TYPE_MAP = {
-  linkedin_lead: { label: 'LinkedIn', icon: <Linkedin size={11} />, color: 'var(--blue)' },
+  linkedin_lead: { label: 'LinkedIn', icon: <Link2 size={11} />, color: 'var(--blue)' },
   scheduled_call: { label: 'Call', icon: <Phone size={11} />, color: 'var(--green)' },
 };
 
