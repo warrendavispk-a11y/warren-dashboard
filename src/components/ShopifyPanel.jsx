@@ -128,7 +128,7 @@ export default function ShopifyPanel() {
           <ShoppingBag size={12} style={{ color: 'var(--green)' }} />
           Shopify Store
           <span style={{ color: 'var(--text-muted)', fontSize: 10, fontWeight: 400, textTransform: 'none', letterSpacing: 0 }}>
-            300000000000000009141.myshopify.com
+            30000000000000009141.myshopify.com
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

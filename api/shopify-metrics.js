@@ -1,4 +1,4 @@
-const SHOP = '300000000000000009141.myshopify.com';
+const SHOP = '30000000000000009141.myshopify.com';
 const VERSION = '2024-10';
 const BASE = `https://${SHOP}/admin/api/${VERSION}`;
 
