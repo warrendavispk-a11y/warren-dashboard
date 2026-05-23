@@ -1,22 +1,32 @@
 import { useState } from 'react';
-import { Activity, Bell, Settings } from 'lucide-react';
-import ShopifyPanel from './components/ShopifyPanel';
+import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare } from 'lucide-react';
+import DebtTracker from './components/DebtTracker';
+import ProductsPanel from './components/ProductsPanel';
 import ContentPipeline from './components/ContentPipeline';
-import AppointmentTracker from './components/AppointmentTracker';
 import SystemStatus from './components/SystemStatus';
 import PriorityActions from './components/PriorityActions';
+import ChatPanel from './components/ChatPanel';
 
 const now = new Date().toLocaleString('en-US', {
   weekday: 'short', month: 'short', day: 'numeric',
-  hour: '2-digit', minute: '2-digit', hour12: true
+  hour: '2-digit', minute: '2-digit', hour12: true,
 });
 
+const TABS = [
+  { key: 'overview', label: 'Overview', icon: Activity },
+  { key: 'debt', label: 'Debt Tracker', icon: TrendingDown },
+  { key: 'products', label: 'Products', icon: ShoppingBag },
+  { key: 'content', label: 'Content', icon: Video },
+  { key: 'system', label: 'System', icon: Cpu },
+  { key: 'actions', label: 'Actions', icon: CheckSquare },
+  { key: 'chat', label: 'Chat', icon: MessageSquare },
+];
+
 export default function App() {
-  const [activeSection, setActiveSection] = useState('all');
+  const [activeTab, setActiveTab] = useState('overview');
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg-base)' }}>
-      {/* Top navbar */}
       <header style={{
         background: 'var(--bg-panel)',
         borderBottom: '1px solid var(--border)',
@@ -37,93 +47,70 @@ export default function App() {
           }}>
             <Activity size={14} color="#000" strokeWidth={2.5} />
           </div>
-          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>
-            WarrenOS
-          </span>
-          <span style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 1 }}>DASHBOARD</span>
+          <span style={{ fontWeight: 700, fontSize: 14, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>WarrenOS</span>
+          <span style={{ color: 'var(--text-muted)', fontSize: 10, marginTop: 1 }}>v1.0</span>
         </div>
 
-        <nav style={{ display: 'flex', gap: 2, flex: 1 }}>
-          {[
-            { key: 'all', label: 'Overview' },
-            { key: 'shopify', label: 'Shopify' },
-            { key: 'content', label: 'Content' },
-            { key: 'leads', label: 'Leads' },
-            { key: 'system', label: 'System' },
-            { key: 'actions', label: 'Actions' },
-          ].map(({ key, label }) => (
+        <nav style={{ display: 'flex', gap: 2, flex: 1, overflowX: 'auto' }}>
+          {TABS.map(({ key, label, icon: Icon }) => (
             <button
               key={key}
-              onClick={() => setActiveSection(key)}
+              onClick={() => setActiveTab(key)}
               style={{
-                padding: '4px 12px',
-                borderRadius: 5,
-                border: 'none',
-                background: activeSection === key ? 'var(--bg-hover)' : 'transparent',
-                color: activeSection === key ? 'var(--green)' : 'var(--text-muted)',
-                fontSize: 12,
-                fontWeight: activeSection === key ? 700 : 400,
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-                fontFamily: 'inherit',
+                padding: '4px 12px', borderRadius: 5, border: 'none',
+                background: activeTab === key ? 'var(--bg-hover)' : 'transparent',
+                color: activeTab === key ? 'var(--green)' : 'var(--text-muted)',
+                fontSize: 12, fontWeight: activeTab === key ? 700 : 400,
+                cursor: 'pointer', transition: 'all 0.15s', fontFamily: 'inherit',
+                display: 'flex', alignItems: 'center', gap: 5, whiteSpace: 'nowrap',
               }}
             >
-              {label}
+              <Icon size={11} />{label}
             </button>
           ))}
         </nav>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <span style={{ color: 'var(--text-muted)', fontSize: 11 }}>{now}</span>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '3px 10px', background: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: 20 }}>
             <span className="dot dot-green pulse" />
-            <span style={{ fontSize: 10, color: 'var(--green)', fontWeight: 600 }}>5/6 Systems Online</span>
+            <span style={{ fontSize: 10, color: 'var(--green)', fontWeight: 600 }}>Live</span>
           </div>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4, display: 'flex' }}>
-            <Bell size={15} />
-          </button>
-          <button style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', padding: 4, display: 'flex' }}>
-            <Settings size={15} />
-          </button>
+          <a
+            href="http://142.93.118.208:9119"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 5,
+              padding: '3px 10px', borderRadius: 20,
+              background: 'rgba(57,211,83,0.1)', border: '1px solid rgba(57,211,83,0.3)',
+              color: 'var(--green)', fontSize: 10, fontWeight: 600,
+              textDecoration: 'none',
+            }}
+          >
+            <MessageSquare size={10} /> Hermes Chat ↗
+          </a>
         </div>
       </header>
 
-      {/* Critical alert banner */}
-      <div style={{
-        background: 'rgba(248,81,73,0.08)',
-        borderBottom: '1px solid rgba(248,81,73,0.2)',
-        padding: '7px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        gap: 10,
-      }}>
-        <span style={{ color: 'var(--red)', fontSize: 11, fontWeight: 700 }}>⚡ CRITICAL</span>
-        <span style={{ color: 'var(--text-secondary)', fontSize: 12 }}>
-          n8n order sync pipeline is broken — last success 18h ago. ~14 orders may be unprocessed.
-        </span>
-        <span
-          style={{ color: 'var(--red)', fontSize: 11, marginLeft: 'auto', cursor: 'pointer' }}
-          onClick={() => setActiveSection('actions')}
-        >
-          View action →
-        </span>
-      </div>
-
-      {/* Main content */}
       <main style={{ padding: '16px 20px', maxWidth: 1600, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 16 }}>
-        {(activeSection === 'all' || activeSection === 'actions') && <PriorityActions />}
-        {(activeSection === 'all' || activeSection === 'shopify') && <ShopifyPanel />}
-
-        {activeSection === 'all' && (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
-            <ContentPipeline />
-            <AppointmentTracker />
-          </div>
+        {activeTab === 'overview' && (
+          <>
+            <DebtTracker compact />
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+              <ProductsPanel compact />
+              <ContentPipeline compact />
+            </div>
+            <PriorityActions />
+            <SystemStatus />
+          </>
         )}
-
-        {activeSection === 'content' && <ContentPipeline />}
-        {activeSection === 'leads' && <AppointmentTracker />}
-        {(activeSection === 'all' || activeSection === 'system') && <SystemStatus />}
+        {activeTab === 'debt' && <DebtTracker />}
+        {activeTab === 'products' && <ProductsPanel />}
+        {activeTab === 'content' && <ContentPipeline />}
+        {activeTab === 'system' && <SystemStatus />}
+        {activeTab === 'actions' && <PriorityActions />}
+        {activeTab === 'chat' && <ChatPanel />}
       </main>
     </div>
   );

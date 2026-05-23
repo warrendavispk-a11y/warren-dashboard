@@ -1,55 +1,70 @@
-export const shopifyMetrics = {
-  sessions: { value: 4821, delta: +12.4, label: 'Sessions' },
-  revenue: { value: '$3,247', delta: +8.1, label: 'Revenue' },
-  orders: { value: 89, delta: +5.3, label: 'Orders' },
-  conversionRate: { value: '1.85%', delta: -0.2, label: 'Conv. Rate' },
+// Warren Davis Digital — Business Data
+// Update these numbers weekly as actuals come in
+
+export const debtMission = {
+  totalDebt: 300000,
+  startDate: '2026-05-22',
+  targetDate: '2027-05-22',
+  monthlyTarget: 25000,
+  paidToDate: 0,
+  currentBalance: 300000,
+  monthsCompleted: 0,
+  currentMonth: 1,
 };
 
+export const incomeStreams = [
+  { id: 1, name: 'Verizon Commission', type: 'primary', monthlyEstimate: 0, ytd: 0, status: 'active' },
+  { id: 2, name: 'Etsy Store', type: 'digital', monthlyEstimate: 0, ytd: 0, status: 'live' },
+  { id: 3, name: 'Shopify Store', type: 'digital', monthlyEstimate: 0, ytd: 0, status: 'live' },
+  { id: 4, name: 'Affiliate Income', type: 'passive', monthlyEstimate: 0, ytd: 0, status: 'building' },
+];
+
 export const products = [
-  { id: 1, name: 'Vintage Chrome Wall Clock', sku: 'WC-001', price: '$34.99', stock: 42, image: true, description: true, status: 'active', revenue: '$1,049.70' },
-  { id: 2, name: 'Minimalist Desk Organizer', sku: 'DO-007', price: '$22.50', stock: 18, image: true, description: false, status: 'active', revenue: '$787.50' },
-  { id: 3, name: 'Bamboo Phone Stand', sku: 'PS-012', price: '$15.99', stock: 0, image: false, description: false, status: 'draft', revenue: '$0.00' },
-  { id: 4, name: 'Leather Cable Organizer', sku: 'CO-003', price: '$19.99', stock: 67, image: true, description: true, status: 'active', revenue: '$519.74' },
-  { id: 5, name: 'Geometric Planter Set', sku: 'GP-021', price: '$44.00', stock: 9, image: true, description: false, status: 'active', revenue: '$396.00' },
-  { id: 6, name: 'Wireless Charging Pad', sku: 'CP-008', price: '$28.00', stock: 33, image: false, description: true, status: 'active', revenue: '$280.00' },
+  { id: 1, name: 'Wireless Sales Script Bundle', sku: 'WSS-001', price: '$27.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: true, description: true },
+  { id: 2, name: 'Sales Objection Crusher', sku: 'SOC-002', price: '$17.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: true, description: true },
+  { id: 3, name: 'Monthly Budget Planner', sku: 'MBP-003', price: '$7.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: true, description: true },
+  { id: 4, name: 'Debt Payoff Tracker', sku: 'DPT-004', price: '$9.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: false, description: true },
+  { id: 5, name: 'Daily Sales Planner', sku: 'DSP-005', price: '$9.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: false, description: true },
+  { id: 6, name: 'Sales & Finance Bundle', sku: 'BDL-001', price: '$37.00', platform: 'Etsy + Shopify', status: 'active', sales: 0, revenue: '$0.00', image: false, description: true },
 ];
 
 export const contentPipeline = [
-  { id: 1, platform: 'tiktok', title: 'Product unboxing: Chrome Wall Clock', status: 'posted', scheduled: '2026-05-18 14:00', views: '12.4K', engagement: '4.2%', tags: ['#aesthetic', '#home'] },
-  { id: 2, platform: 'tiktok', title: '5 desk setup upgrades under $50', status: 'queued', scheduled: '2026-05-21 18:00', views: null, engagement: null, tags: ['#desksetup', '#productivity'] },
-  { id: 3, platform: 'instagram', title: 'Minimalist morning routine flat lay', status: 'draft', scheduled: null, views: null, engagement: null, tags: ['#minimalism', '#lifestyle'] },
-  { id: 4, platform: 'instagram', title: 'Behind the scenes: packing orders', status: 'posted', scheduled: '2026-05-17 10:00', views: '2.1K', engagement: '6.8%', tags: ['#smallbusiness', '#bts'] },
-  { id: 5, platform: 'pinterest', title: 'Home office inspo board — Summer 2026', status: 'queued', scheduled: '2026-05-22 09:00', views: null, engagement: null, tags: ['#homeoffice', '#interiordesign'] },
-  { id: 6, platform: 'pinterest', title: 'Gift ideas under $30 — organized', status: 'posted', scheduled: '2026-05-15 12:00', views: '8.7K', engagement: '2.1%', tags: ['#giftideas'] },
-  { id: 7, platform: 'tiktok', title: 'POV: your desk before & after upgrade', status: 'draft', scheduled: null, views: null, engagement: null, tags: ['#transformation'] },
-  { id: 8, platform: 'instagram', title: 'Customer review spotlight — May', status: 'queued', scheduled: '2026-05-23 15:00', views: null, engagement: null, tags: ['#reviews', '#testimonial'] },
+  { id: 1, platform: 'tiktok', title: 'Origin story — "$300K in debt, here\'s the plan"', status: 'queued', scheduled: 'Day 1' },
+  { id: 2, platform: 'tiktok', title: '"I need to think about it" — say THIS', status: 'queued', scheduled: 'Day 2' },
+  { id: 3, platform: 'tiktok', title: 'I made money while at work — how', status: 'queued', scheduled: 'Day 3' },
+  { id: 4, platform: 'instagram', title: 'Origin story reel (repost)', status: 'queued', scheduled: 'Day 1' },
+  { id: 5, platform: 'youtube', title: 'Stop saying "what can I help you with"', status: 'queued', scheduled: 'Day 2' },
+  { id: 6, platform: 'pinterest', title: 'Sales Script Bundle product pin', status: 'queued', scheduled: 'Day 1' },
+  { id: 7, platform: 'twitter', title: 'Thread: $300K debt payoff plan', status: 'queued', scheduled: 'Day 1' },
+  { id: 8, platform: 'tiktok', title: 'Trade-in close — price objection handler', status: 'queued', scheduled: 'Day 4' },
 ];
 
-export const appointments = [
-  { id: 1, name: 'Jordan Lee', company: 'Apex Retail Co.', role: 'Head of Procurement', type: 'linkedin_lead', status: 'responded', linkedinUrl: '#', notes: 'Interested in bulk order of organizers. Asked for catalog.', date: '2026-05-19' },
-  { id: 2, name: 'Sarah Kim', company: 'HomeGoods Direct', role: 'Buyer', type: 'scheduled_call', status: 'confirmed', callTime: '2026-05-21 11:00 AM EST', notes: 'Intro call — she found us via TikTok.', date: '2026-05-21' },
-  { id: 3, name: 'Marcus Wade', company: 'Urban Loft Stores', role: 'CEO', type: 'linkedin_lead', status: 'pending', linkedinUrl: '#', notes: 'Sent connection request. No reply yet.', date: '2026-05-17' },
-  { id: 4, name: 'Priya Nair', company: 'Nomad Goods', role: 'Sourcing Manager', type: 'scheduled_call', status: 'confirmed', callTime: '2026-05-22 2:00 PM EST', notes: 'Wants to discuss white-label options.', date: '2026-05-22' },
-  { id: 5, name: 'Tom Adler', company: 'Shelf & Co.', role: 'Director of Ops', type: 'linkedin_lead', status: 'responded', linkedinUrl: '#', notes: 'Requested samples. Address sent.', date: '2026-05-18' },
-  { id: 6, name: 'Elena Vasquez', company: 'Studio Nova', role: 'Creative Director', type: 'scheduled_call', status: 'pending', callTime: '2026-05-24 10:00 AM EST', notes: 'Collaborative branding discussion.', date: '2026-05-24' },
-];
-
-export const systemStatus = [
-  { id: 1, name: 'VPS — Primary Node', host: 'vps-01.hetzner.cloud', status: 'online', uptime: '99.98%', cpu: 34, ram: 61, disk: 48, lastCheck: '30s ago', location: 'Frankfurt' },
-  { id: 2, name: 'Hermes Agent', host: 'internal service', status: 'online', uptime: '100%', cpu: 8, ram: 22, disk: null, lastCheck: '30s ago', location: 'VPS' },
-  { id: 3, name: 'AutoDS', host: 'app.autods.com', status: 'online', uptime: '99.1%', cpu: null, ram: null, disk: null, lastCheck: '2m ago', location: 'Cloud' },
-  { id: 4, name: 'n8n Automation', host: 'n8n.internal:5678', status: 'degraded', uptime: '97.4%', cpu: 71, ram: 84, disk: 55, lastCheck: '1m ago', location: 'VPS' },
-  { id: 5, name: 'Shopify Storefront', host: 'mystore.myshopify.com', status: 'online', uptime: '99.99%', cpu: null, ram: null, disk: null, lastCheck: '1m ago', location: 'Cloud' },
-  { id: 6, name: 'Database (Postgres)', host: 'db-01.internal:5432', status: 'online', uptime: '99.95%', cpu: 12, ram: 45, disk: 62, lastCheck: '30s ago', location: 'VPS' },
+export const socialFollowers = [
+  { platform: 'TikTok', handle: '@warrendavisdigital', followers: 0, goal: 1000, status: 'setup' },
+  { platform: 'Instagram', handle: '@warrendavisdigital', followers: 0, goal: 500, status: 'setup' },
+  { platform: 'YouTube', handle: '@warrendavisdigital', followers: 0, goal: 500, status: 'setup' },
+  { platform: 'Pinterest', handle: '@warrendavisdigital', followers: 0, goal: 200, status: 'setup' },
+  { platform: 'Twitter/X', handle: '@warrendavisdigital', followers: 0, goal: 300, status: 'setup' },
 ];
 
 export const priorityActions = [
-  { id: 1, urgency: 'critical', title: 'Fix n8n workflow — order sync broken', detail: 'AutoDS→Shopify order pipeline not firing. Last success: 18h ago. ~14 orders may be unprocessed.', category: 'system', due: 'NOW', assignee: 'You' },
-  { id: 2, urgency: 'high', title: 'Add description & images to Bamboo Phone Stand', detail: 'SKU PS-012 has 0 stock, no images, no description. Draft status. Needs full product page before launch.', category: 'store', due: 'Today', assignee: 'You' },
-  { id: 3, urgency: 'high', title: 'Follow up: Marcus Wade (Urban Loft)', detail: 'LinkedIn connection request sent 3 days ago, no reply. Send a direct message with value prop.', category: 'leads', due: 'Today', assignee: 'You' },
-  { id: 4, urgency: 'medium', title: 'Finalize Instagram draft — minimalist flat lay', detail: 'Content created, needs caption edits and hashtag research before scheduling.', category: 'content', due: 'Tomorrow', assignee: 'You' },
-  { id: 5, urgency: 'medium', title: 'Prep deck for Sarah Kim call (May 21)', detail: 'HomeGoods Direct intro call. Prepare catalog PDF, pricing tiers, and MOQ info.', category: 'leads', due: 'May 21', assignee: 'You' },
-  { id: 6, urgency: 'medium', title: 'Restock Geometric Planter Set (9 units left)', detail: 'SKU GP-021 nearing stockout. Place AutoDS reorder for 50+ units.', category: 'store', due: 'This week', assignee: 'You' },
-  { id: 7, urgency: 'low', title: 'Add images to Wireless Charging Pad listing', detail: 'SKU CP-008 has description but missing product images. Sales may be impacted.', category: 'store', due: 'This week', assignee: 'You' },
-  { id: 8, urgency: 'low', title: 'Draft TikTok POV video script', detail: '"Before & after desk upgrade" concept. Write script + shot list for recording session.', category: 'content', due: 'This week', assignee: 'You' },
+  { id: 1, urgency: 'critical', title: 'Create Canva mockup images for all 5 products', detail: 'Each listing needs 4 mockup images before going fully live. See image direction in each product\'s listings/etsy.md file.', category: 'store', due: 'TODAY', assignee: 'Warren' },
+  { id: 2, urgency: 'critical', title: 'Set up all 6 social media profiles', detail: '@warrendavisdigital on TikTok, Instagram, YouTube, Pinterest, Twitter/X, Facebook. Full copy-paste bios ready.', category: 'social', due: 'TODAY', assignee: 'Warren' },
+  { id: 3, urgency: 'high', title: 'Film and post first 3 TikTok videos', detail: 'Scripts #1, #2, #5 are written and ready. Film today — use your sales energy. Post same day.', category: 'content', due: 'TODAY', assignee: 'Warren' },
+  { id: 4, urgency: 'high', title: 'Create Linktree and connect product links', detail: 'linktr.ee — add all 5 product Etsy links + Shopify. Add to every platform bio.', category: 'store', due: 'TODAY', assignee: 'Warren' },
+  { id: 5, urgency: 'high', title: 'Set up Mailchimp + 3-email welcome sequence', detail: 'Lead magnet: "3 Free Sales Scripts" PDF. Welcome sequence auto-sells the bundle on Day 7.', category: 'email', due: 'This week', assignee: 'Warren' },
+  { id: 6, urgency: 'medium', title: 'Connect Pinterest to Etsy (auto-pins listings)', detail: 'Pinterest > Settings > Claim > Claim your Etsy. Takes 5 minutes. Fully passive after that.', category: 'social', due: 'This week', assignee: 'Warren' },
+  { id: 7, urgency: 'medium', title: 'Install Metricool for cross-platform scheduling', detail: 'metricool.com — connect all accounts. Schedule a full week every Sunday in one sitting.', category: 'automation', due: 'This week', assignee: 'Warren' },
+  { id: 8, urgency: 'low', title: 'Add Canva images to DPT-004 and DSP-005', detail: 'Debt Payoff Tracker and Daily Sales Planner listings are missing mockup images. Needs visuals to convert.', category: 'store', due: 'This week', assignee: 'Warren' },
 ];
+
+export const systemStatus = [
+  { id: 1, name: 'Hermes Agent', host: '142.93.118.208', status: 'online', detail: 'Telegram connected', lastCheck: 'live' },
+  { id: 2, name: 'Hermes Dashboard', host: '142.93.118.208:9119', status: 'online', detail: 'Chat UI running', lastCheck: 'live', url: 'http://142.93.118.208:9119' },
+  { id: 3, name: 'Telegram Gateway', host: 'DM: Warren Davis', status: 'online', detail: 'Claude Code linked in', lastCheck: 'live' },
+  { id: 4, name: 'Etsy Store', host: 'etsy.com', status: 'live', detail: '5 products listed', lastCheck: 'manual' },
+  { id: 5, name: 'Shopify Store', host: 'shopify.com', status: 'live', detail: '5 products listed', lastCheck: 'manual' },
+  { id: 6, name: 'WarrenOS Dashboard', host: 'vercel.app', status: 'online', detail: 'This site', lastCheck: 'live' },
+];
+
+export const monthlyUpdates = [];

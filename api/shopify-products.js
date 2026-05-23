@@ -1,5 +1,5 @@
-const SHOP = 'my-store-30000000000000009141.myshopify.com';
-const VERSION = '2024-10';
+const SHOP = 'my-store-300000000000000009141.myshopify.com';
+const VERSION = '2026-04';
 const BASE = `https://${SHOP}/admin/api/${VERSION}`;
 
 function headers() {
