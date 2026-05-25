@@ -1,11 +1,12 @@
 import { useState } from 'react';
-import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare } from 'lucide-react';
+import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare, DollarSign } from 'lucide-react';
 import DebtTracker from './components/DebtTracker';
 import ProductsPanel from './components/ProductsPanel';
 import ContentPipeline from './components/ContentPipeline';
 import SystemStatus from './components/SystemStatus';
 import PriorityActions from './components/PriorityActions';
 import ChatPanel from './components/ChatPanel';
+import FinancePanel from './components/FinancePanel';
 
 const now = new Date().toLocaleString('en-US', {
   weekday: 'short', month: 'short', day: 'numeric',
@@ -14,6 +15,7 @@ const now = new Date().toLocaleString('en-US', {
 
 const TABS = [
   { key: 'overview', label: 'Overview', icon: Activity },
+  { key: 'finance', label: 'Finance', icon: DollarSign },
   { key: 'debt', label: 'Debt Tracker', icon: TrendingDown },
   { key: 'products', label: 'Products', icon: ShoppingBag },
   { key: 'content', label: 'Content', icon: Video },
@@ -105,6 +107,7 @@ export default function App() {
             <SystemStatus />
           </>
         )}
+        {activeTab === 'finance' && <FinancePanel />}
         {activeTab === 'debt' && <DebtTracker />}
         {activeTab === 'products' && <ProductsPanel />}
         {activeTab === 'content' && <ContentPipeline />}
