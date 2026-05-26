@@ -6,6 +6,7 @@ const BASE = "https://warren-dashboard-fresh.vercel.app/downloads";
 const FILES = [
   { title: "Wireless Sales Script Bundle", uuid: "d525c4ccf42845cd932bec44ab6354d2", filename: "Wireless-Sales-Script-Bundle.pdf", desc: "7 word-for-word scripts for wireless sales reps" },
   { title: "Sales Objection Crusher", uuid: "32dba230449f4ed483b15d4d52e49a51", filename: "Sales-Objection-Crusher.pdf", desc: "25 responses to the objections costing you commission" },
+  { title: "Daily Sales Planner", uuid: "86ca3bbaa441442fbf0586caa87269df", filename: "Daily-Sales-Planner.pdf", desc: "The 10-minute daily tracker top reps use" },
   { title: "Monthly Budget Planner", uuid: "61415c475522444a8b98927b539ba36f", filename: "Monthly-Budget-Planner.pdf", desc: "Zero-based budgeting printable — give every dollar a name" },
   { title: "Debt Payoff Tracker", uuid: "35973118d8a54340b202ffd99f7bafcc", filename: "Debt-Payoff-Tracker.pdf", desc: "Complete debt elimination roadmap" },
 ];
@@ -95,7 +96,7 @@ export default async function handler(req, res) {
 </head>
 <body>
   <div class="card">
-    <div class="badge">✓ Purchase Verified — 4 PDFs Ready</div>
+    <div class="badge">✓ Purchase Verified — 5 PDFs Ready</div>
     <h1>The Sales & Finance Starter Pack</h1>
     <div class="subtitle">Download all 4 files below. They're yours forever — print unlimited copies.</div>
     ${rows}

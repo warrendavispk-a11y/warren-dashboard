@@ -30,6 +30,21 @@ const PRODUCTS = {
     uuid: "86ca3bbaa441442fbf0586caa87269df",
     filename: "Daily-Sales-Planner.pdf",
   },
+  "adhd-sales-planner": {
+    title: "ADHD Sales Rep Daily Planner",
+    uuid: "51992a375ca243adbf47361305f88aef",
+    filename: "ADHD-Sales-Rep-Daily-Planner.pdf",
+  },
+  "wireless-b2b-kit": {
+    title: "Wireless B2B Prospecting Kit",
+    uuid: "9d63342aafae4dd18df2eb9556e50e5a",
+    filename: "Wireless-B2B-Prospecting-Kit.pdf",
+  },
+  "sales-accelerator": {
+    title: "The Sales Accelerator — 30-Day Commission Multiplier",
+    uuid: "d432ef3fa9964a75a8c02c9a642291d8",
+    filename: "Sales-Accelerator-30-Day-Commission-Multiplier.pdf",
+  },
 };
 
 function errorPage(message) {
