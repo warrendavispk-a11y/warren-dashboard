@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare, DollarSign } from 'lucide-react';
+import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare, DollarSign, Store, Terminal, Zap } from 'lucide-react';
 import DebtTracker from './components/DebtTracker';
 import ProductsPanel from './components/ProductsPanel';
 import ContentPipeline from './components/ContentPipeline';
@@ -7,6 +7,10 @@ import SystemStatus from './components/SystemStatus';
 import PriorityActions from './components/PriorityActions';
 import ChatPanel from './components/ChatPanel';
 import FinancePanel from './components/FinancePanel';
+import GumroadPanel from './components/GumroadPanel';
+import ShopifyPanel from './components/ShopifyPanel';
+import LogsPanel from './components/LogsPanel';
+import WebhooksPanel from './components/WebhooksPanel';
 
 const now = new Date().toLocaleString('en-US', {
   weekday: 'short', month: 'short', day: 'numeric',
@@ -17,8 +21,11 @@ const TABS = [
   { key: 'overview', label: 'Overview', icon: Activity },
   { key: 'finance', label: 'Finance', icon: DollarSign },
   { key: 'debt', label: 'Debt Tracker', icon: TrendingDown },
+  { key: 'store', label: 'Store Revenue', icon: Store },
   { key: 'products', label: 'Products', icon: ShoppingBag },
   { key: 'content', label: 'Content', icon: Video },
+  { key: 'logs', label: 'Logs', icon: Terminal },
+  { key: 'webhooks', label: 'Webhooks', icon: Zap },
   { key: 'system', label: 'System', icon: Cpu },
   { key: 'actions', label: 'Actions', icon: CheckSquare },
   { key: 'chat', label: 'Chat', icon: MessageSquare },
@@ -109,8 +116,16 @@ export default function App() {
         )}
         {activeTab === 'finance' && <FinancePanel />}
         {activeTab === 'debt' && <DebtTracker />}
+        {activeTab === 'store' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <GumroadPanel />
+            <ShopifyPanel />
+          </div>
+        )}
         {activeTab === 'products' && <ProductsPanel />}
         {activeTab === 'content' && <ContentPipeline />}
+        {activeTab === 'logs' && <LogsPanel />}
+        {activeTab === 'webhooks' && <WebhooksPanel />}
         {activeTab === 'system' && <SystemStatus />}
         {activeTab === 'actions' && <PriorityActions />}
         {activeTab === 'chat' && <ChatPanel />}

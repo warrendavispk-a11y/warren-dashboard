@@ -8,4 +8,4 @@ npm run build
 
 # Start the server
 echo "[WarrenOS] Starting server on port 4000..."
-exec node server.js
+exec node --env-file=.env server.js
