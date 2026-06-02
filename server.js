@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import { execSync } from 'child_process';
-import { readFileSync, existsSync, appendFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, appendFileSync } from 'fs';
 import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -178,6 +178,58 @@ app.get('/api/shopify-products', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// --- Shopify OAuth ---
+app.get('/shopify/auth', (req, res) => {
+  const clientId = process.env.SHOPIFY_API_KEY;
+  if (!clientId) return res.status(500).send('SHOPIFY_API_KEY not set — add it to .env first');
+  const nonce = crypto.randomBytes(16).toString('hex');
+  global._shopifyNonce = nonce;
+  const redirectUri = `http://142.93.118.208:4000/shopify/callback`;
+  const scopes = 'read_products,write_products,read_orders,read_inventory';
+  const authUrl = `https://${SHOPIFY_STORE}/admin/oauth/authorize?client_id=${clientId}&scope=${encodeURIComponent(scopes)}&redirect_uri=${encodeURIComponent(redirectUri)}&state=${nonce}`;
+  res.redirect(authUrl);
+});
+
+app.get('/shopify/callback', async (req, res) => {
+  const { code, state } = req.query;
+  if (!code) return res.status(400).send('Missing code parameter from Shopify');
+  if (state !== global._shopifyNonce) return res.status(400).send('State mismatch — possible CSRF. Visit /shopify/auth again.');
+  const clientId = process.env.SHOPIFY_API_KEY;
+  const clientSecret = process.env.SHOPIFY_API_SECRET;
+  if (!clientId || !clientSecret) return res.status(500).send('SHOPIFY_API_KEY or SHOPIFY_API_SECRET not set in .env');
+  try {
+    const tokenRes = await fetch(`https://${SHOPIFY_STORE}/admin/oauth/access_token`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ client_id: clientId, client_secret: clientSecret, code }),
+    });
+    if (!tokenRes.ok) throw new Error(`Token exchange failed: ${tokenRes.status} ${await tokenRes.text()}`);
+    const { access_token } = await tokenRes.json();
+    if (!access_token) throw new Error('No access_token in Shopify response');
+
+    const envPath = '/root/warren-dashboard-fresh/.env';
+    const raw = readFileSync(envPath, 'utf8');
+    const updated = raw.includes('SHOPIFY_CLIENT_SECRET=')
+      ? raw.replace(/^SHOPIFY_CLIENT_SECRET=.*/m, `SHOPIFY_CLIENT_SECRET=${access_token}`)
+      : raw + `\nSHOPIFY_CLIENT_SECRET=${access_token}`;
+    writeFileSync(envPath, updated);
+    process.env.SHOPIFY_CLIENT_SECRET = access_token;
+
+    res.send(`<!DOCTYPE html><html><body style="font-family:sans-serif;padding:40px;max-width:600px;margin:auto">
+      <h2>&#x2705; Shopify Connected!</h2>
+      <p>New token saved to .env and active immediately — no restart needed.</p>
+      <p><strong>Token preview:</strong> ${access_token.slice(0, 12)}...</p>
+      <p>Also run this on the VPS to activate cron agents:<br>
+      <code style="background:#f4f4f4;padding:4px 8px;border-radius:4px">
+        sed -i 's/^SHOPIFY_ADMIN_API_KEY=.*/SHOPIFY_ADMIN_API_KEY=${access_token}/' /root/.hermes/.env
+      </code></p>
+      <p><a href="/">&#x2190; Back to Dashboard</a></p>
+    </body></html>`);
+  } catch (err) {
+    res.status(500).send(`<pre style="color:red">Error: ${err.message}</pre><p><a href="/shopify/auth">Try again</a></p>`);
   }
 });
 
