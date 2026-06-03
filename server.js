@@ -4,7 +4,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 import { execSync } from 'child_process';
-import { readFileSync, writeFileSync, existsSync, appendFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, appendFileSync, readdirSync, statSync } from 'fs';
 import crypto from 'crypto';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -333,6 +333,176 @@ app.get('/api/webhooks', (req, res) => {
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', time: new Date().toISOString() });
+});
+
+// ── Content Studio Asset Gallery ─────────────────────────────────────────────
+
+const STUDIO_RUNS_DIR = process.env.STUDIO_RUNS_DIR || '/root/content-studio/runs';
+const STUDIO_APPROVED = process.env.STUDIO_APPROVED || '/root/content-studio/approved-assets.jsonl';
+const STUDIO_WINNING  = process.env.STUDIO_WINNING  || '/root/content-studio/winning-creatives.jsonl';
+
+function readJson(filePath) {
+  try { return JSON.parse(readFileSync(filePath, 'utf8')); } catch { return null; }
+}
+
+function readJsonl(filePath) {
+  if (!existsSync(filePath)) return [];
+  return readFileSync(filePath, 'utf8')
+    .split('\n').filter(Boolean)
+    .map(l => { try { return JSON.parse(l); } catch { return null; } })
+    .filter(Boolean);
+}
+
+function loadApprovedSet() {
+  const rows = [...readJsonl(STUDIO_APPROVED), ...readJsonl(STUDIO_WINNING)];
+  return new Set(rows.map(r => r.run_id).filter(Boolean));
+}
+
+// GET /api/assets — list all runs newest-first
+app.get('/api/assets', (req, res) => {
+  try {
+    if (!existsSync(STUDIO_RUNS_DIR)) return res.json({ runs: [] });
+    const approved = loadApprovedSet();
+    const runs = readdirSync(STUDIO_RUNS_DIR)
+      .filter(name => statSync(path.join(STUDIO_RUNS_DIR, name)).isDirectory())
+      .sort((a, b) => b.localeCompare(a))
+      .map(name => {
+        const dir   = path.join(STUDIO_RUNS_DIR, name);
+        const brief = readJson(path.join(dir, 'brief.json')) || {};
+        const imgs  = readJson(path.join(dir, 'images.json')) || {};
+        const meta  = brief._meta || {};
+        const imageUrls = {};
+        for (const [ratio, absPath] of Object.entries(imgs)) {
+          const fname = path.basename(absPath);
+          imageUrls[ratio] = `/api/assets/image/${name}/${fname}`;
+        }
+        return {
+          run_id:   name,
+          product:  meta.product  || name.split('_')[1] || name,
+          platform: meta.platform || '',
+          goal:     meta.goal     || '',
+          date:     name.split('_')[0] || '',
+          approved: approved.has(name),
+          images:   imageUrls,
+          hooks:    brief.hooks        || [],
+          captions: brief.captions     || [],
+          ad_copy:  brief.ad_copy      || '',
+        };
+      });
+    res.json({ runs });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/assets/image/:runId/:filename — serve image file
+app.get('/api/assets/image/:runId/:filename', (req, res) => {
+  const { runId, filename } = req.params;
+  // Sanitize — no path traversal
+  if (runId.includes('..') || filename.includes('..')) return res.status(400).end();
+  const imgPath = path.join(STUDIO_RUNS_DIR, runId, 'images', filename);
+  if (!existsSync(imgPath)) return res.status(404).end();
+  const ext = path.extname(filename).toLowerCase();
+  const mime = ext === '.png' ? 'image/png' : 'image/jpeg';
+  res.set('Content-Type', mime);
+  res.set('Cache-Control', 'public, max-age=86400');
+  res.sendFile(imgPath);
+});
+
+// POST /api/assets/:runId/approve — mark a run approved
+app.post('/api/assets/:runId/approve', (req, res) => {
+  const { runId } = req.params;
+  if (runId.includes('..')) return res.status(400).end();
+  const dir = path.join(STUDIO_RUNS_DIR, runId);
+  if (!existsSync(dir)) return res.status(404).json({ error: 'Run not found' });
+  const already = loadApprovedSet().has(runId);
+  if (!already) {
+    const record = JSON.stringify({ run_id: runId, approved_at: new Date().toISOString(), source: 'dashboard' });
+    appendFileSync(STUDIO_APPROVED, record + '\n');
+  }
+  res.json({ ok: true, run_id: runId, already });
+});
+
+// ── Revenue OS ───────────────────────────────────────────────────────────────
+
+const REVENUE_OS_DIR   = '/root/content-studio/revenue-os';
+const PRODUCTS_JSONL   = path.join(REVENUE_OS_DIR, 'products.jsonl');
+const CAMPAIGNS_JSONL  = path.join(REVENUE_OS_DIR, 'campaigns.jsonl');
+const PERFORMANCE_JSONL = path.join(REVENUE_OS_DIR, 'performance.jsonl');
+const WINNERS_JSONL    = path.join(REVENUE_OS_DIR, 'winners.jsonl');
+const SYNC_SCRIPT      = '/root/content-studio/scripts/sync-revenue.sh';
+
+// GET /api/revenue/products — list products with run count + winner count
+app.get('/api/revenue/products', (req, res) => {
+  try {
+    const products  = readJsonl(PRODUCTS_JSONL);
+    const campaigns = readJsonl(CAMPAIGNS_JSONL);
+    const winners   = readJsonl(WINNERS_JSONL);
+
+    const enriched = products.map(p => {
+      const runCount    = campaigns.filter(c => (c.product || '').toLowerCase().replace(/\s+/g, '-') === p.id || (c.product || '').toLowerCase() === p.name.toLowerCase()).length;
+      const winnerCount = winners.filter(w => (w.product || '').toLowerCase() === p.name.toLowerCase() || (w.product || '').toLowerCase().replace(/\s+/g, '-') === p.id).length;
+      return { ...p, run_count: runCount, winner_count: winnerCount };
+    });
+    res.json({ products: enriched });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/revenue/winners — list all detected winners
+app.get('/api/revenue/winners', (req, res) => {
+  try {
+    const winners = readJsonl(WINNERS_JSONL);
+    res.json({ winners });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// GET /api/revenue/summary — total revenue, top product, win rate, campaign count
+app.get('/api/revenue/summary', (req, res) => {
+  try {
+    const performance = readJsonl(PERFORMANCE_JSONL);
+    const winners     = readJsonl(WINNERS_JSONL);
+    const campaigns   = readJsonl(CAMPAIGNS_JSONL);
+    const products    = readJsonl(PRODUCTS_JSONL);
+
+    const totalRevenue = performance.reduce((sum, r) => sum + (parseFloat(r.revenue) || 0), 0);
+
+    // Top product by revenue
+    const revenueByProduct = {};
+    for (const r of performance) {
+      const p = r.product || 'unknown';
+      revenueByProduct[p] = (revenueByProduct[p] || 0) + (parseFloat(r.revenue) || 0);
+    }
+    const topProduct = Object.entries(revenueByProduct).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+
+    // Win rate = winners / campaigns with any performance data
+    const runsWithPerf = new Set(performance.map(r => r.run_id).filter(Boolean));
+    const winRate = runsWithPerf.size > 0 ? Math.round((winners.length / runsWithPerf.size) * 100) : 0;
+
+    res.json({
+      total_revenue:    parseFloat(totalRevenue.toFixed(2)),
+      winner_count:     winners.length,
+      campaign_count:   campaigns.length,
+      product_count:    products.length,
+      top_product:      topProduct,
+      win_rate_pct:     winRate,
+    });
+  } catch (e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+// POST /api/revenue/sync — trigger sync-revenue.sh on-demand
+app.post('/api/revenue/sync', (req, res) => {
+  try {
+    const output = execSync(`bash "${SYNC_SCRIPT}" 2>&1`, { timeout: 60_000 }).toString();
+    res.json({ ok: true, output });
+  } catch (e) {
+    res.status(500).json({ ok: false, error: e.message, output: e.stdout?.toString() || '' });
+  }
 });
 
 // API catch-all — return JSON 404 instead of falling through to SPA

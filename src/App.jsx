@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare, DollarSign, Store, Terminal, Zap } from 'lucide-react';
+import { Activity, MessageSquare, TrendingDown, ShoppingBag, Video, Cpu, CheckSquare, DollarSign, Store, Terminal, Zap, Layers, TrendingUp } from 'lucide-react';
 import DebtTracker from './components/DebtTracker';
 import ProductsPanel from './components/ProductsPanel';
 import ContentPipeline from './components/ContentPipeline';
@@ -11,6 +11,8 @@ import GumroadPanel from './components/GumroadPanel';
 import ShopifyPanel from './components/ShopifyPanel';
 import LogsPanel from './components/LogsPanel';
 import WebhooksPanel from './components/WebhooksPanel';
+import AssetGallery from './components/AssetGallery';
+import RevenueOS from './components/RevenueOS';
 
 const now = new Date().toLocaleString('en-US', {
   weekday: 'short', month: 'short', day: 'numeric',
@@ -24,11 +26,13 @@ const TABS = [
   { key: 'store', label: 'Store Revenue', icon: Store },
   { key: 'products', label: 'Products', icon: ShoppingBag },
   { key: 'content', label: 'Content', icon: Video },
+  { key: 'studio', label: 'Studio', icon: Layers },
   { key: 'logs', label: 'Logs', icon: Terminal },
   { key: 'webhooks', label: 'Webhooks', icon: Zap },
   { key: 'system', label: 'System', icon: Cpu },
   { key: 'actions', label: 'Actions', icon: CheckSquare },
   { key: 'chat', label: 'Chat', icon: MessageSquare },
+  { key: 'revenue', label: 'Revenue OS', icon: TrendingUp },
 ];
 
 export default function App() {
@@ -124,11 +128,13 @@ export default function App() {
         )}
         {activeTab === 'products' && <ProductsPanel />}
         {activeTab === 'content' && <ContentPipeline />}
+        {activeTab === 'studio' && <AssetGallery />}
         {activeTab === 'logs' && <LogsPanel />}
         {activeTab === 'webhooks' && <WebhooksPanel />}
         {activeTab === 'system' && <SystemStatus />}
         {activeTab === 'actions' && <PriorityActions />}
         {activeTab === 'chat' && <ChatPanel />}
+        {activeTab === 'revenue' && <RevenueOS />}
       </main>
     </div>
   );
